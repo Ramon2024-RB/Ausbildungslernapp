@@ -1,178 +1,458 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ausbildungs Lernapp</title>
 
-<title>Ausbildungs Lernapp</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-<style>
-body{
-font-family:Arial;
-background:#f5f5f5;
-padding:30px;
-}
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #2563eb, #0f172a);
+      min-height: 100vh;
+      color: #111827;
+    }
 
-.container{
-max-width:700px;
-margin:auto;
-background:white;
-padding:25px;
-border-radius:12px;
-}
+    .app {
+      max-width: 850px;
+      margin: auto;
+      padding: 25px;
+    }
 
-button{
-width:100%;
-padding:14px;
-margin-top:10px;
-cursor:pointer;
-border:none;
-border-radius:8px;
-background:#2563eb;
-color:white;
-}
+    .card {
+      background: white;
+      border-radius: 22px;
+      padding: 30px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+      margin-top: 40px;
+    }
 
-.correct{
-background:#16a34a !important;
-}
+    h1, h2, h3 {
+      margin-top: 0;
+    }
 
-.wrong{
-background:#dc2626 !important;
-}
-</style>
+    .subtitle {
+      color: #6b7280;
+      line-height: 1.5;
+    }
 
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 15px;
+      margin-top: 25px;
+    }
+
+    .select-card {
+      border: 2px solid #e5e7eb;
+      padding: 22px;
+      border-radius: 18px;
+      cursor: pointer;
+      transition: 0.2s;
+      background: #f9fafb;
+    }
+
+    .select-card:hover {
+      border-color: #2563eb;
+      transform: translateY(-3px);
+    }
+
+    .badge {
+      display: inline-block;
+      background: #dbeafe;
+      color: #1d4ed8;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 14px;
+      margin-bottom: 15px;
+      font-weight: bold;
+    }
+
+    .progress-box {
+      background: #e5e7eb;
+      height: 12px;
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 15px 0 25px;
+    }
+
+    .progress {
+      height: 100%;
+      width: 0%;
+      background: #2563eb;
+      transition: 0.3s;
+    }
+
+    .question {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 25px;
+    }
+
+    .answer {
+      width: 100%;
+      padding: 16px;
+      margin-bottom: 12px;
+      border: 2px solid #e5e7eb;
+      border-radius: 14px;
+      background: white;
+      cursor: pointer;
+      text-align: left;
+      font-size: 16px;
+      transition: 0.2s;
+    }
+
+    .answer:hover {
+      background: #f3f4f6;
+    }
+
+    .correct {
+      background: #dcfce7 !important;
+      border-color: #16a34a !important;
+    }
+
+    .wrong {
+      background: #fee2e2 !important;
+      border-color: #dc2626 !important;
+    }
+
+    .info-box {
+      margin-top: 20px;
+      padding: 18px;
+      background: #f9fafb;
+      border-left: 5px solid #2563eb;
+      border-radius: 12px;
+      display: none;
+    }
+
+    .top-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .score {
+      font-weight: bold;
+      color: #2563eb;
+    }
+
+    .btn {
+      padding: 14px 20px;
+      border: none;
+      border-radius: 12px;
+      background: #2563eb;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    .btn:hover {
+      background: #1d4ed8;
+    }
+
+    .btn-secondary {
+      background: #111827;
+    }
+
+    .result-number {
+      font-size: 42px;
+      font-weight: bold;
+      color: #2563eb;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
 </head>
 
 <body>
 
-<div class="container">
+  <div class="app">
 
-<h1>Ausbildungs Lernapp</h1>
+    <div id="startScreen" class="card">
+      <h1>Ausbildungs Lernapp</h1>
+      <p class="subtitle">
+        Wähle eine Ausbildung aus und übe typische Prüfungsfragen.
+        Die App zeigt dir richtige Antworten, Erklärungen und dein Ergebnis.
+      </p>
 
-<h3 id="category"></h3>
+      <h2>Ausbildung auswählen</h2>
 
-<h2 id="question"></h2>
+      <div class="grid" id="categoryGrid"></div>
+    </div>
 
-<div id="answers"></div>
+    <div id="quizScreen" class="card hidden">
+      <div class="top-row">
+        <div>
+          <span class="badge" id="activeCategory"></span>
+          <h2>Quizmodus</h2>
+        </div>
+        <div class="score" id="scoreText">Punkte: 0</div>
+      </div>
 
-<p id="result"></p>
+      <p id="questionCounter"></p>
 
-</div>
+      <div class="progress-box">
+        <div class="progress" id="progressBar"></div>
+      </div>
 
-<script>
+      <div class="question" id="questionText"></div>
 
-const questions = [
+      <div id="answerArea"></div>
 
-{
-category:"Pflege",
-question:"Wie lange dauert eine Händedesinfektion?",
-answers:[
-"5 Sekunden",
-"30 Sekunden",
-"2 Minuten",
-"Nicht nötig"
-],
-correct:1
-},
+      <div class="info-box" id="explanationBox">
+        <h3>Erklärung</h3>
+        <p id="explanationText"></p>
+        <button class="btn" onclick="nextQuestion()">Nächste Frage</button>
+      </div>
+    </div>
 
-{
-category:"Kfz",
-question:"Was macht die Kupplung?",
-answers:[
-"Kühlt Motor",
-"Verbindet Motor und Getriebe",
-"Lädt Batterie",
-"Steuert Licht"
-],
-correct:1
-}
+    <div id="resultScreen" class="card hidden">
+      <h1>Ergebnis</h1>
+      <p class="subtitle">Du hast das Quiz abgeschlossen.</p>
 
-];
+      <div class="result-number" id="finalScore"></div>
 
-let current=0;
+      <p id="finalText"></p>
 
-function showQuestion(){
+      <button class="btn" onclick="restartSameCategory()">Nochmal üben</button>
+      <button class="btn btn-secondary" onclick="backToStart()">Andere Ausbildung wählen</button>
+    </div>
 
-const q=questions[current];
+  </div>
 
-document.getElementById("category").innerText=
-q.category;
+  <script>
+    const questions = [
+      {
+        category: "Pflege",
+        topic: "Hygiene",
+        question: "Wie lange sollte eine hygienische Händedesinfektion ungefähr dauern?",
+        answers: [
+          "5 Sekunden",
+          "10 Sekunden",
+          "30 Sekunden",
+          "5 Minuten"
+        ],
+        correct: 2,
+        explanation: "Eine hygienische Händedesinfektion dauert in der Regel ca. 30 Sekunden und muss gründlich durchgeführt werden."
+      },
+      {
+        category: "Pflege",
+        topic: "Kommunikation",
+        question: "Was ist im Umgang mit Patienten besonders wichtig?",
+        answers: [
+          "Unfreundlich und schnell sprechen",
+          "Aktiv zuhören und respektvoll bleiben",
+          "Patienten ignorieren",
+          "Nur Fachbegriffe benutzen"
+        ],
+        correct: 1,
+        explanation: "Respektvolle Kommunikation und aktives Zuhören stärken Vertrauen und Sicherheit."
+      },
+      {
+        category: "Kfz",
+        topic: "Motor",
+        question: "Welche Aufgabe hat die Kupplung?",
+        answers: [
+          "Sie verbindet und trennt Motor und Getriebe",
+          "Sie kühlt den Motor",
+          "Sie steuert die Lichtanlage",
+          "Sie erhöht den Reifendruck"
+        ],
+        correct: 0,
+        explanation: "Die Kupplung trennt oder verbindet den Kraftfluss zwischen Motor und Getriebe."
+      },
+      {
+        category: "Kfz",
+        topic: "Sicherheit",
+        question: "Warum ist der richtige Reifendruck wichtig?",
+        answers: [
+          "Er beeinflusst Sicherheit und Verbrauch",
+          "Er ist nur für die Optik wichtig",
+          "Er macht das Auto lauter",
+          "Er verändert die Farbe der Reifen"
+        ],
+        correct: 0,
+        explanation: "Falscher Reifendruck kann Bremsweg, Fahrverhalten und Kraftstoffverbrauch verschlechtern."
+      },
+      {
+        category: "Büro",
+        topic: "Organisation",
+        question: "Was bedeutet eine gute Ablage im Büro?",
+        answers: [
+          "Dokumente unsortiert sammeln",
+          "Alles löschen",
+          "Unterlagen strukturiert und auffindbar speichern",
+          "Nur Papier benutzen"
+        ],
+        correct: 2,
+        explanation: "Eine gute Ablage spart Zeit und sorgt dafür, dass wichtige Informationen schnell gefunden werden."
+      },
+      {
+        category: "Einzelhandel",
+        topic: "Kundenkontakt",
+        question: "Was ist im Verkaufsgespräch besonders wichtig?",
+        answers: [
+          "Kundenwünsche erkennen",
+          "Kunden unterbrechen",
+          "Kein Blickkontakt",
+          "Keine Fragen stellen"
+        ],
+        correct: 0,
+        explanation: "Gute Beratung beginnt damit, die Wünsche und Bedürfnisse des Kunden zu verstehen."
+      }
+    ];
 
-document.getElementById("question").innerText=
-q.question;
+    let selectedCategory = "";
+    let filteredQuestions = [];
+    let currentIndex = 0;
+    let score = 0;
+    let answered = false;
 
-const area=
-document.getElementById("answers");
+    const startScreen = document.getElementById("startScreen");
+    const quizScreen = document.getElementById("quizScreen");
+    const resultScreen = document.getElementById("resultScreen");
 
-area.innerHTML="";
+    function loadCategories() {
+      const categories = [...new Set(questions.map(q => q.category))];
+      const grid = document.getElementById("categoryGrid");
+      grid.innerHTML = "";
 
-q.answers.forEach((answer,index)=>{
+      categories.forEach(category => {
+        const amount = questions.filter(q => q.category === category).length;
 
-const btn=
-document.createElement("button");
+        const card = document.createElement("div");
+        card.className = "select-card";
+        card.onclick = () => startQuiz(category);
 
-btn.innerText=answer;
+        card.innerHTML = `
+          <h3>${category}</h3>
+          <p>${amount} Fragen verfügbar</p>
+        `;
 
-btn.onclick=()=>check(index);
+        grid.appendChild(card);
+      });
+    }
 
-area.appendChild(btn);
+    function startQuiz(category) {
+      selectedCategory = category;
+      filteredQuestions = questions.filter(q => q.category === category);
+      currentIndex = 0;
+      score = 0;
 
-});
+      startScreen.classList.add("hidden");
+      resultScreen.classList.add("hidden");
+      quizScreen.classList.remove("hidden");
 
-}
+      showQuestion();
+    }
 
-function check(index){
+    function showQuestion() {
+      answered = false;
 
-const q=questions[current];
+      const q = filteredQuestions[currentIndex];
 
-const buttons=
-document.querySelectorAll("button");
+      document.getElementById("activeCategory").innerText = q.category + " • " + q.topic;
+      document.getElementById("scoreText").innerText = "Punkte: " + score;
+      document.getElementById("questionCounter").innerText =
+        "Frage " + (currentIndex + 1) + " von " + filteredQuestions.length;
 
-buttons.forEach(btn=>btn.disabled=true);
+      document.getElementById("questionText").innerText = q.question;
 
-if(index===q.correct){
+      const progress = ((currentIndex) / filteredQuestions.length) * 100;
+      document.getElementById("progressBar").style.width = progress + "%";
 
-buttons[index].classList.add("correct");
+      document.getElementById("explanationBox").style.display = "none";
 
-document.getElementById("result")
-.innerText="Richtig";
+      const answerArea = document.getElementById("answerArea");
+      answerArea.innerHTML = "";
 
-}else{
+      q.answers.forEach((answer, index) => {
+        const button = document.createElement("button");
+        button.className = "answer";
+        button.innerText = answer;
+        button.onclick = () => checkAnswer(index, button);
+        answerArea.appendChild(button);
+      });
+    }
 
-buttons[index].classList.add("wrong");
+    function checkAnswer(index, clickedButton) {
+      if (answered) return;
+      answered = true;
 
-buttons[q.correct].classList.add("correct");
+      const q = filteredQuestions[currentIndex];
+      const buttons = document.querySelectorAll(".answer");
 
-document.getElementById("result")
-.innerText="Falsch";
+      buttons.forEach(btn => btn.disabled = true);
 
-}
+      if (index === q.correct) {
+        clickedButton.classList.add("correct");
+        score++;
+      } else {
+        clickedButton.classList.add("wrong");
+        buttons[q.correct].classList.add("correct");
+      }
 
-setTimeout(()=>{
+      document.getElementById("scoreText").innerText = "Punkte: " + score;
+      document.getElementById("explanationText").innerText = q.explanation;
+      document.getElementById("explanationBox").style.display = "block";
+    }
 
-current++;
+    function nextQuestion() {
+      currentIndex++;
 
-if(current>=questions.length){
+      if (currentIndex >= filteredQuestions.length) {
+        showResult();
+      } else {
+        showQuestion();
+      }
+    }
 
-current=0;
+    function showResult() {
+      quizScreen.classList.add("hidden");
+      resultScreen.classList.remove("hidden");
 
-alert("Quiz beendet");
+      document.getElementById("progressBar").style.width = "100%";
+      document.getElementById("finalScore").innerText =
+        score + " / " + filteredQuestions.length;
 
-}
+      let percent = Math.round((score / filteredQuestions.length) * 100);
+      let text = "";
 
-document.getElementById("result")
-.innerText="";
+      if (percent >= 80) {
+        text = "Sehr gut! Du bist schon stark vorbereitet.";
+      } else if (percent >= 50) {
+        text = "Solide Leistung. Wiederhole die falschen Fragen nochmal.";
+      } else {
+        text = "Noch ausbaufähig. Übe die Grundlagen weiter.";
+      }
 
-showQuestion();
+      document.getElementById("finalText").innerText =
+        text + " Ergebnis: " + percent + "%";
+    }
 
-},2000);
+    function restartSameCategory() {
+      startQuiz(selectedCategory);
+    }
 
-}
+    function backToStart() {
+      resultScreen.classList.add("hidden");
+      startScreen.classList.remove("hidden");
+    }
 
-showQuestion();
-
-</script>
+    loadCategories();
+  </script>
 
 </body>
+</html>
 
 </html>
