@@ -1,423 +1,374 @@
 <!DOCTYPE html>
 <html lang="de">
-
 <head>
-
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ausbildungs Akademie</title>
 
 <style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial;
-}
-
-body{
-background:
-linear-gradient(
-180deg,
-#2563eb,
-#0f172a
-);
-
-min-height:100vh;
-color:white;
-}
-
-.screen{
-display:none;
-padding:25px;
-}
-
-.active{
-display:block;
-}
-
-.logo{
-
-font-size:34px;
-
-margin-top:40px;
-
-font-weight:bold;
-
-}
-
-.welcome{
-
-margin-top:10px;
-
-opacity:.8;
-
-}
-
-.card{
-
-background:white;
-
-color:black;
-
-padding:22px;
-
-border-radius:20px;
-
-margin-top:18px;
-
-}
-
-.button{
-
-width:100%;
-
-padding:18px;
-
-border:none;
-
-border-radius:15px;
-
-font-size:18px;
-
-margin-top:15px;
-
-cursor:pointer;
-
-}
-
-.primary{
-
-background:#2563eb;
-
-color:white;
-
-}
-
-.dark{
-
-background:#111827;
-
-color:white;
-
-}
-
-.gray{
-
-background:#e5e7eb;
-
-}
-
-.stat{
-
-font-size:32px;
-
-color:#2563eb;
-
-font-weight:bold;
-
-}
-
-.select{
-
-padding:18px;
-
-border-radius:14px;
-
-background:#f5f5f5;
-
-margin-top:10px;
-
-cursor:pointer;
-
-}
-
-.bottom{
-
-margin-top:30px;
-
-display:flex;
-
-gap:10px;
-
-}
-
-.bottom button{
-
-flex:1;
-
-}
-
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial}
+body{background:linear-gradient(135deg,#2563eb,#0f172a);min-height:100vh;color:white}
+body.dark{background:#020617;color:white}
+.app{max-width:900px;margin:auto;padding:25px}
+.screen{display:none}
+.active{display:block}
+.card{background:white;color:#111827;border-radius:22px;padding:25px;margin-top:20px;box-shadow:0 15px 35px rgba(0,0,0,.25)}
+.dark .card{background:#111827;color:white;border:1px solid #334155}
+h1,h2,h3{margin-bottom:12px}
+p{line-height:1.5}
+.btn{width:100%;padding:15px;border:none;border-radius:14px;margin-top:12px;font-weight:bold;cursor:pointer;font-size:16px}
+.primary{background:#2563eb;color:white}
+.darkbtn{background:#111827;color:white}
+.gray{background:#e5e7eb;color:#111827}
+.green{background:#16a34a;color:white}
+.red{background:#dc2626;color:white}
+input,select,textarea{width:100%;padding:14px;border-radius:12px;border:1px solid #ccc;margin-top:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:15px}
+.option{padding:18px;background:#f3f4f6;border-radius:15px;cursor:pointer;margin-top:10px}
+.dark .option{background:#1e293b}
+.badge{display:inline-block;background:#dbeafe;color:#1d4ed8;padding:6px 12px;border-radius:999px;font-weight:bold;margin-bottom:10px}
+.progressbox{height:12px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin:15px 0}
+.progress{height:100%;background:#2563eb;width:0%}
+.answer{padding:15px;background:#f3f4f6;border-radius:14px;margin-top:10px;cursor:pointer}
+.correct{background:#bbf7d0!important}
+.wrong{background:#fecaca!important}
+.nav{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+.nav button{flex:1}
+.logo{font-size:34px;font-weight:bold;margin-top:25px}
+.small{color:#6b7280}
+.dark .small{color:#cbd5e1}
 </style>
-
 </head>
 
 <body>
+<div class="app">
 
-<div
-id="home"
-class="screen active"
->
+<div id="home" class="screen active">
+  <div class="logo">📘 Ausbildungs Akademie</div>
+  <p>Willkommen zurück, <span id="usernameText">Gast</span>.</p>
 
-<div class="logo">
-
-📘 Ausbildungs Akademie
-
+  <div class="card">
+    <h2>Startseite</h2>
+    <p>Wähle, was du machen möchtest.</p>
+    <button class="btn primary" onclick="show('courses')">Ausbildung auswählen</button>
+    <button class="btn green" onclick="startLearning()">Lernmodus</button>
+    <button class="btn darkbtn" onclick="startExam()">Prüfungsmodus</button>
+    <button class="btn gray" onclick="show('stats')">Fortschritt</button>
+    <button class="btn gray" onclick="show('admin')">Adminbereich</button>
+    <button class="btn gray" onclick="show('settings')">Einstellungen</button>
+    <button class="btn gray" onclick="show('login')">Login / Profil</button>
+  </div>
 </div>
 
-<div class="welcome">
-
-Willkommen zurück.
-
-Wähle eine Ausbildung
-oder lerne weiter.
-
+<div id="login" class="screen">
+  <div class="card">
+    <h2>Login</h2>
+    <p class="small">Ein einfacher Demo-Login ohne echte Datenbank.</p>
+    <input id="usernameInput" placeholder="Dein Name">
+    <button class="btn primary" onclick="login()">Speichern</button>
+    <button class="btn darkbtn" onclick="show('home')">Zur Startseite</button>
+  </div>
 </div>
 
-<div class="card">
-
-<h2>
-
-Weiterlernen
-
-</h2>
-
-<p>
-
-Zuletzt geöffnet:
-Pflege
-
-</p>
-
-<button
-class="button primary"
-onclick="openLearning()"
->
-
-Weiterlernen
-
-</button>
-
+<div id="courses" class="screen">
+  <div class="card">
+    <h2>Ausbildung auswählen</h2>
+    <div class="grid" id="courseGrid"></div>
+    <button class="btn darkbtn" onclick="show('home')">Zur Startseite</button>
+  </div>
 </div>
 
-<div class="card">
-
-<h2>
-
-Ausbildungen
-
-</h2>
-
-<div
-class="select"
-onclick="start('Pflege')"
->
-
-🏥 Pflege
-
+<div id="quiz" class="screen">
+  <div class="card">
+    <span class="badge" id="modeText"></span>
+    <h2 id="courseTitle"></h2>
+    <p id="counter"></p>
+    <div class="progressbox"><div class="progress" id="progress"></div></div>
+    <h2 id="questionText"></h2>
+    <div id="answers"></div>
+    <div id="explanation" style="display:none;margin-top:20px"></div>
+    <button class="btn darkbtn" onclick="show('home')">Zur Startseite</button>
+  </div>
 </div>
 
-<div
-class="select"
-onclick="start('Kfz')"
->
-
-🚗 Kfz
-
+<div id="result" class="screen">
+  <div class="card">
+    <h2>Ergebnis</h2>
+    <h1 id="resultScore"></h1>
+    <p id="resultText"></p>
+    <button class="btn primary" onclick="startLearning()">Nochmal lernen</button>
+    <button class="btn darkbtn" onclick="show('home')">Zur Startseite</button>
+  </div>
 </div>
 
-<div
-class="select"
-onclick="start('Büro')"
->
-
-💼 Büro
-
+<div id="stats" class="screen">
+  <div class="card">
+    <h2>Dein Fortschritt</h2>
+    <p>Richtige Antworten: <b id="rightStat">0</b></p>
+    <p>Beantwortete Fragen: <b id="totalStat">0</b></p>
+    <p>Aktuelle Ausbildung: <b id="courseStat">Pflege</b></p>
+    <button class="btn darkbtn" onclick="show('home')">Zur Startseite</button>
+  </div>
 </div>
 
-<div
-class="select"
-onclick="start('Einzelhandel')"
->
+<div id="admin" class="screen">
+  <div class="card">
+    <h2>Adminbereich</h2>
+    <p class="small">Hier kannst du Demo-Fragen hinzufügen.</p>
 
-🛒 Einzelhandel
+    <input id="newCategory" placeholder="Ausbildung, z.B. Pflege">
+    <input id="newTopic" placeholder="Thema, z.B. Hygiene">
+    <textarea id="newQuestion" placeholder="Frage"></textarea>
+    <input id="a1" placeholder="Antwort 1">
+    <input id="a2" placeholder="Antwort 2">
+    <input id="a3" placeholder="Antwort 3">
+    <input id="a4" placeholder="Antwort 4">
 
+    <select id="correctAnswer">
+      <option value="0">Antwort 1 ist richtig</option>
+      <option value="1">Antwort 2 ist richtig</option>
+      <option value="2">Antwort 3 ist richtig</option>
+      <option value="3">Antwort 4 ist richtig</option>
+    </select>
+
+    <textarea id="newExplanation" placeholder="Erklärung"></textarea>
+
+    <button class="btn primary" onclick="addQuestion()">Frage hinzufügen</button>
+    <button class="btn darkbtn" onclick="show('home')">Zur Startseite</button>
+  </div>
 </div>
 
-</div>
-
-<div class="card">
-
-<h2>
-
-Dein Fortschritt
-
-</h2>
-
-<div class="stat">
-
-0%
-
-</div>
-
-<p>
-
-0 Fragen abgeschlossen
-
-</p>
-
-</div>
-
-<div class="bottom">
-
-<button
-class="button gray"
-onclick="settings()"
->
-
-⚙ Einstellungen
-
-</button>
-
-<button
-class="button dark"
-onclick="profile()"
->
-
-👤 Profil
-
-</button>
-
-</div>
-
-</div>
-
-<div
-id="learn"
-class="screen"
->
-
-<div class="card">
-
-<h1>
-
-Lernbereich
-
-</h1>
-
-<p
-id="course"
->
-
-</p>
-
-<button
-class="button primary"
->
-
-Quiz starten
-
-</button>
-
-<button
-class="button dark"
-onclick="home()"
->
-
-← Zur Startseite
-
-</button>
-
+<div id="settings" class="screen">
+  <div class="card">
+    <h2>Einstellungen</h2>
+    <button class="btn primary" onclick="toggleDark()">Dunkelmodus an/aus</button>
+    <button class="btn red" onclick="resetProgress()">Fortschritt löschen</button>
+    <button class="btn darkbtn" onclick="show('home')">Zur Startseite</button>
+  </div>
 </div>
 
 </div>
 
 <script>
+let questions = [
+  {
+    category:"Pflege",
+    topic:"Hygiene",
+    question:"Wie lange dauert eine hygienische Händedesinfektion ungefähr?",
+    answers:["5 Sekunden","10 Sekunden","30 Sekunden","5 Minuten"],
+    correct:2,
+    explanation:"Eine hygienische Händedesinfektion dauert meistens ca. 30 Sekunden."
+  },
+  {
+    category:"Pflege",
+    topic:"Kommunikation",
+    question:"Was ist im Umgang mit Patienten wichtig?",
+    answers:["Ignorieren","Aktiv zuhören","Unterbrechen","Nur Fachbegriffe nutzen"],
+    correct:1,
+    explanation:"Aktives Zuhören schafft Vertrauen und Sicherheit."
+  },
+  {
+    category:"Kfz",
+    topic:"Motor",
+    question:"Welche Aufgabe hat die Kupplung?",
+    answers:["Motor kühlen","Motor und Getriebe verbinden/trennen","Batterie laden","Licht steuern"],
+    correct:1,
+    explanation:"Die Kupplung verbindet oder trennt Motor und Getriebe."
+  },
+  {
+    category:"Büro",
+    topic:"Organisation",
+    question:"Was bedeutet gute Ablage?",
+    answers:["Alles unsortiert sammeln","Alles löschen","Dokumente auffindbar speichern","Nichts dokumentieren"],
+    correct:2,
+    explanation:"Eine gute Ablage spart Zeit und sorgt für Ordnung."
+  }
+];
+
+let selectedCourse = "Pflege";
+let currentQuestions = [];
+let currentIndex = 0;
+let score = 0;
+let mode = "lernen";
+
+let totalAnswered = Number(localStorage.getItem("totalAnswered")) || 0;
+let totalRight = Number(localStorage.getItem("totalRight")) || 0;
 
 function show(id){
-
-document
-.querySelectorAll(
-".screen"
-)
-
-.forEach(
-s=>
-s.classList
-.remove(
-"active"
-)
-)
-
-document
-.getElementById(
-id
-)
-
-.classList
-.add(
-"active"
-)
-
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  updateStats();
 }
 
-function start(name){
-
-document
-.getElementById(
-"course"
-)
-
-.innerHTML=
-
-"Ausgewählt: "
-
-+
-
-name
-
-show(
-"learn"
-)
-
+function login(){
+  const name = document.getElementById("usernameInput").value;
+  if(name.trim() !== ""){
+    localStorage.setItem("username", name);
+    document.getElementById("usernameText").innerText = name;
+  }
+  show("home");
 }
 
-function home(){
-
-show(
-"home"
-)
-
+function loadUser(){
+  const name = localStorage.getItem("username");
+  if(name) document.getElementById("usernameText").innerText = name;
 }
 
-function settings(){
+function loadCourses(){
+  const courses = [...new Set(questions.map(q=>q.category))];
+  const grid = document.getElementById("courseGrid");
+  grid.innerHTML = "";
 
-alert(
-"Einstellungen kommen später"
-)
-
+  courses.forEach(course=>{
+    const div = document.createElement("div");
+    div.className = "option";
+    div.innerHTML = `<h3>${course}</h3><p>${questions.filter(q=>q.category===course).length} Fragen</p>`;
+    div.onclick = ()=>{
+      selectedCourse = course;
+      show("home");
+    };
+    grid.appendChild(div);
+  });
 }
 
-function profile(){
-
-alert(
-"Profil kommt später"
-)
-
+function startLearning(){
+  mode = "lernen";
+  startQuiz();
 }
 
-function openLearning(){
-
-show(
-"learn"
-)
-
+function startExam(){
+  mode = "prüfung";
+  startQuiz();
 }
 
+function startQuiz(){
+  currentQuestions = questions.filter(q=>q.category===selectedCourse);
+  currentIndex = 0;
+  score = 0;
+  show("quiz");
+  showQuestion();
+}
+
+function showQuestion(){
+  const q = currentQuestions[currentIndex];
+
+  document.getElementById("modeText").innerText = mode === "lernen" ? "Lernmodus" : "Prüfungsmodus";
+  document.getElementById("courseTitle").innerText = selectedCourse + " • " + q.topic;
+  document.getElementById("counter").innerText = "Frage " + (currentIndex+1) + " von " + currentQuestions.length;
+  document.getElementById("questionText").innerText = q.question;
+  document.getElementById("progress").style.width = ((currentIndex/currentQuestions.length)*100) + "%";
+
+  document.getElementById("explanation").style.display = "none";
+  document.getElementById("answers").innerHTML = "";
+
+  q.answers.forEach((answer,index)=>{
+    const div = document.createElement("div");
+    div.className = "answer";
+    div.innerText = answer;
+    div.onclick = ()=>checkAnswer(index, div);
+    document.getElementById("answers").appendChild(div);
+  });
+}
+
+function checkAnswer(index, element){
+  const q = currentQuestions[currentIndex];
+  const answers = document.querySelectorAll(".answer");
+
+  answers.forEach(a=>a.onclick=null);
+
+  totalAnswered++;
+
+  if(index === q.correct){
+    score++;
+    totalRight++;
+    element.classList.add("correct");
+  } else {
+    element.classList.add("wrong");
+    answers[q.correct].classList.add("correct");
+  }
+
+  localStorage.setItem("totalAnswered", totalAnswered);
+  localStorage.setItem("totalRight", totalRight);
+
+  if(mode === "lernen"){
+    document.getElementById("explanation").style.display = "block";
+    document.getElementById("explanation").innerHTML =
+      `<h3>Erklärung</h3><p>${q.explanation}</p><button class="btn primary" onclick="nextQuestion()">Weiter</button>`;
+  } else {
+    setTimeout(nextQuestion, 700);
+  }
+}
+
+function nextQuestion(){
+  currentIndex++;
+  if(currentIndex >= currentQuestions.length){
+    showResult();
+  } else {
+    showQuestion();
+  }
+}
+
+function showResult(){
+  show("result");
+  document.getElementById("resultScore").innerText = score + " / " + currentQuestions.length;
+
+  const percent = Math.round((score/currentQuestions.length)*100);
+
+  let text = "Übe weiter.";
+  if(percent >= 80) text = "Sehr gut vorbereitet!";
+  else if(percent >= 50) text = "Solide Leistung.";
+
+  document.getElementById("resultText").innerText = text + " Ergebnis: " + percent + "%";
+}
+
+function addQuestion(){
+  const q = {
+    category:document.getElementById("newCategory").value,
+    topic:document.getElementById("newTopic").value,
+    question:document.getElementById("newQuestion").value,
+    answers:[
+      document.getElementById("a1").value,
+      document.getElementById("a2").value,
+      document.getElementById("a3").value,
+      document.getElementById("a4").value
+    ],
+    correct:Number(document.getElementById("correctAnswer").value),
+    explanation:document.getElementById("newExplanation").value
+  };
+
+  if(q.category && q.question && q.answers[0]){
+    questions.push(q);
+    loadCourses();
+    alert("Frage wurde hinzugefügt.");
+    show("home");
+  } else {
+    alert("Bitte mindestens Ausbildung, Frage und Antwort 1 ausfüllen.");
+  }
+}
+
+function toggleDark(){
+  document.body.classList.toggle("dark");
+}
+
+function updateStats(){
+  document.getElementById("rightStat").innerText = totalRight;
+  document.getElementById("totalStat").innerText = totalAnswered;
+  document.getElementById("courseStat").innerText = selectedCourse;
+}
+
+function resetProgress(){
+  totalAnswered = 0;
+  totalRight = 0;
+  localStorage.removeItem("totalAnswered");
+  localStorage.removeItem("totalRight");
+  updateStats();
+  alert("Fortschritt gelöscht.");
+}
+
+loadUser();
+loadCourses();
+updateStats();
 </script>
 
 </body>
-
 </html>
